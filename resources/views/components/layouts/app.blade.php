@@ -43,13 +43,12 @@
                 <x-menu-item title="Inicio" icon="o-sparkles" link="/" />
                 <x-menu-item title="Equipos" icon="o-user-group" link="/teams" />
                 <x-menu-sub title="Settings" icon="o-cog-6-tooth">
-                    <x-menu-item title="Wifi" icon="o-wifi" link="####" />
-                    <x-menu-item title="Archives" icon="o-archive-box" link="####" />
+                    {{-- <x-menu-item title="Wifi" icon="o-wifi" link="####" /> --}}
+                    {{-- <x-menu-item title="Archives" icon="o-archive-box" link="####" /> --}}
+                    <x-theme-toggle />
                 </x-menu-sub>
             </x-menu>
-            <x-menu>
-                <x-menu-item title="Theme" icon="o-swatch" @click="$dispatch('mary-toggle-theme')" />
-            </x-menu>
+
         </x-slot:sidebar>
 
         {{-- The `$slot` goes here --}}
