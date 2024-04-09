@@ -2,6 +2,9 @@
 use Livewire\Volt\Volt;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
+
+// Define the login route
 
 // Users will be redirected to this route if not logged in
 Volt::route('/login', 'login')->name('login');
@@ -18,6 +21,11 @@ Route::get('/logout', function () {
     return redirect('/');
 });
 
+Route::get('/cache', function () {
+    return Cache::flush();
+    //return redirect('/');
+});
+
 Route::get('/clear', function () {
     $logs = [];
     $maintenance=[
@@ -25,7 +33,7 @@ Route::get('/clear', function () {
         //'Storage Link'=>'storage:link',
         'Config'=>'config:clear',
         'Optimize Clear'=>'optimize:clear',
-        'Optimize'=>'optimize',
+        //'Optimize'=>'optimize',
         'Route Clear'=>'route:clear',
         'Cache'=>'cache:clear',
     ];
@@ -34,10 +42,11 @@ Route::get('/clear', function () {
             Artisan::call($value);
             $logs[$key]='✔️';
         } catch (\Exception $e) {
-            $logs[$key]='❌';
+            $logs[$key]='❌'.$e->getMessage();
         }
     }
     return "<pre>".print_r($logs,true)."</pre><hr />";
+    //    return var_dump($maintenance,true);
     //.Artisan::output();
 });
 
