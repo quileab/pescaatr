@@ -45,7 +45,7 @@
                 <x-menu-sub title="Settings" icon="o-cog-6-tooth">
                     {{-- <x-menu-item title="Wifi" icon="o-wifi" link="####" /> --}}
                     {{-- <x-menu-item title="Archives" icon="o-archive-box" link="####" /> --}}
-                    <x-theme-toggle />
+                    <x-theme-toggle class="btn btn-circle btn-ghost" />
                 </x-menu-sub>
             </x-menu>
 

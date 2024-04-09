@@ -68,7 +68,8 @@ new class extends Component {
 
     <!-- TABLE  -->
     <x-card>
-        <x-table :headers="$headers" :rows="$teams" :sort-by="$sortBy">
+        <x-table :headers="$headers" :rows="$teams" :sort-by="$sortBy"
+            link="team/players/{id}">
             @scope('actions', $team)
             <x-button icon="o-trash" wire:click="delete({{ $team['id'] }})" wire:confirm="⚠️ Está seguro?" spinner class="btn-ghost btn-sm text-red-500" />
             @endscope
