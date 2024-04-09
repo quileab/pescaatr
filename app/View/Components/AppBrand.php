@@ -28,7 +28,7 @@ class AppBrand extends Component
                         <div class="flex items-center gap-2">
                             <x-icon name="o-square-3-stack-3d" class="w-6 -mb-1 text-indigo-600" />
                             <span class="font-bold text-3xl mr-3 bg-gradient-to-r from-indigo-600 via-purple-600 to-red-700 bg-clip-text text-transparent ">
-                                quileab
+                                PesVarATR
                             </span>
                         </div>
                     </div>

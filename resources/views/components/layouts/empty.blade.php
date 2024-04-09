@@ -11,7 +11,10 @@
     <x-main>
         <x-slot:content>
             <div class="mx-auto w-72 bg-slate-800 bg-opacity-30 backdrop-blur-sm rounded-lg shadow-sm shadow-black p-4">
-                <div class="my-4 text-center">Logo</div>
+                <div class="my-4 text-center">
+                {{-- logo --}}
+                <img src="../logo.webp" class="w-1/3 mx-auto">
+                </div>
                 {{ $slot }}
             </div>
         </x-slot:content>
