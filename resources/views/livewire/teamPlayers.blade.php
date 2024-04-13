@@ -14,8 +14,13 @@ new class extends Component {
 
     public array $sortBy = ['column' => 'name', 'direction' => 'asc'];
 
+    public $team=null;
+    public $players=null;
+
     public function mount($id){
-        dd($id);
+        $this->team=\App\Models\Team::with('players')->find($id);
+        $this->players=$this->team->players;
+        //dd($id,$this->team->name, $this->team->players[0]->fullname);
     }
     
     // Clear filters
@@ -35,25 +40,24 @@ new class extends Component {
     public function headers(): array
     {
         return [
-            ['key' => 'id', 'label' => '#', 'class' => 'w-1'],
-            ['key' => 'name', 'label' => 'Nombre del Equipo', 'class' => 'w-64'],
-            ['key' => 'boatName', 'label' => 'Lancha', 'class' => 'w-20'],
+            ['key' => 'id', 'label' => 'DNI', 'class' => 'w-4'],
+            ['key' => 'fullname', 'label' => 'Nombre', 'class' => 'w-64'],
+            ['key' => 'email', 'label' => 'Email', 'class' => 'w-20'],
+            ['key' => 'type', 'label' => 'Tipo', 'class' => 'w-10'],
         ];
     }
 
-    public function teams(): Collection
+    public function players(): Collection
     {
-        return \App\Models\Team::all()
-            ->sortBy([[...array_values($this->sortBy)]])
-            ->when($this->search, function (Collection $collection) {
-                return $collection->filter(fn(array $item) => str($item['name'])->contains($this->search, true));
-            });
+        return $this->players=$this->team->players
+            ->sortBy([[...array_values($this->sortBy)]]);
+     
     }
 
     public function with(): array
     {
         return [
-            'teams' => $this->teams(),
+            'players' => $this->players(),
             'headers' => $this->headers()
         ];
     }
@@ -61,32 +65,17 @@ new class extends Component {
 
 <div>
     <!-- HEADER -->
-    <x-header title="Equipos" separator progress-indicator>
-        <x-slot:middle class="!justify-end">
-            <x-input placeholder="Search..." wire:model.live.debounce="search" clearable icon="o-magnifying-glass" />
-        </x-slot:middle>
-        <x-slot:actions>
-            <x-button label="Filters" @click="$wire.drawer = true" responsive icon="o-funnel" />
-        </x-slot:actions>
+    <x-header title="Datos del Equipo" separator progress-indicator>
     </x-header>
 
     <!-- TABLE  -->
     <x-card>
-        <x-table :headers="$headers" :rows="$teams" :sort-by="$sortBy"
-            link="users/{id}/edit">
+        <x-table :headers="$headers" :rows="$players" :sort-by="$sortBy"
+            link="players/{id}/edit">
             @scope('actions', $team)
             <x-button icon="o-trash" wire:click="delete({{ $team['id'] }})" wire:confirm="⚠️ Está seguro?" spinner class="btn-ghost btn-sm text-red-500" />
             @endscope
         </x-table>
     </x-card>
 
-    <!-- FILTER DRAWER -->
-    <x-drawer wire:model="drawer" title="Filters" right separator with-close-button class="lg:w-1/3">
-        <x-input placeholder="Search..." wire:model.live.debounce="search" icon="o-magnifying-glass" @keydown.enter="$wire.drawer = false" />
-
-        <x-slot:actions>
-            <x-button label="Reset" icon="o-x-mark" wire:click="clear" spinner />
-            <x-button label="Done" icon="o-check" class="btn-primary" @click="$wire.drawer = false" />
-        </x-slot:actions>
-    </x-drawer>
 </div>
