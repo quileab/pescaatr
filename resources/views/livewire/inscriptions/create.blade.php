@@ -144,7 +144,7 @@ new #[Layout('components.layouts.clean')] #[Title('Inscripciones')] class extend
         </span> --}}
     </div>
     <div class="grid gap-3 grid-cols-1 mb-2 md:grid-cols-2">
-      <x-input label="Nombre del Equipo" wire:model="teamName" inline />
+      <x-input label="Peña / Club o Barra Pesquera" wire:model="teamName" inline />
       <x-input label="Nombre de la Embarcación" wire:model="teamBoatName" inline />
 
       <x-input label="Matrícula" wire:model="teamBoatPlate" inline />

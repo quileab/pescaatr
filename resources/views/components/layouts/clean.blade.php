@@ -16,7 +16,7 @@
         <div class="my-4 text-center grid grid-cols-2 gap-2 md:grid-cols-4">
           {{-- logo --}}
           <img src="../logo.webp" class="w-20 h-auto mx-auto col-start-1 col-span-1">
-          <div class="text-center w-full col-start-2 col-span-3">
+          <div class="text-center text-white w-full col-start-2 col-span-3">
             <h2 class="text-xl font-bold">Bienvenido</h2>
             <p class="text-sm text-justify mb-1">
             Para poder procesar el registro de manera correcta, te pedimos que completes el formulario con atención y asegurándote de que todos los datos sean precisos.

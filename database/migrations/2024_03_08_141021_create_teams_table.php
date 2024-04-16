@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('boatName',80);
             $table->string('plate',80)->unique();
             $table->integer('hp');
+            $table->integer('number')->unique()->nullable();
             $table->timestamps();
         });
     }
