@@ -14,5 +14,6 @@
 <body>
   <h1>Bienvenido</h1>
   Lo esperamos en junio para disfrutar de la fiesta!!!
+  {{ var_dump($team) }}
 </body>
 </html>

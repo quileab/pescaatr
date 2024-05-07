@@ -13,12 +13,13 @@ class Welcome extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $team;
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(string $team)
     {
-        //
+        $this->team=\App\Models\Team::with('players')->where('plate', $team)->first();
     }
 
     /**
@@ -43,6 +44,9 @@ class Welcome extends Mailable
     {
         return new Content(
             view: 'emails.welcome',
+            with: [
+                'team' => $this->team,
+            ],
         );
     }
 

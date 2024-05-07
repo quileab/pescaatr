@@ -54,9 +54,9 @@ Route::get('/artisan/{command}', function ($command) {
     return Artisan::call($command);
 });
 
-Route::get('/test_mail_welcome',function(){
-    Illuminate\Support\Facades\Mail::send(new App\Mail\Welcome());
-    return redirect('/');
+Route::get('/test_mail_welcome/{id}',function($id){
+    Illuminate\Support\Facades\Mail::send(new App\Mail\Welcome($id));
+    //return redirect('/');
 });
 
 
