@@ -5,6 +5,7 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -17,9 +18,10 @@ class Welcome extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(string $team)
+    public function __construct(string $plate)
     {
-        $this->team=\App\Models\Team::with('players')->where('plate', $team)->first();
+        $this->team=\App\Models\Team::with('players')->where('plate', $plate)->first()->toArray();
+        //dd($this->team);
     }
 
     /**
@@ -57,6 +59,8 @@ class Welcome extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        return [
+          Attachment::fromPath(public_path('Reglamento y Condiciones.pdf')),
+        ];
     }
 }
