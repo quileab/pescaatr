@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'team_id',
+        'date',
+        'amount',
+        'notes',
+    ];
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    }
 }

@@ -15,39 +15,39 @@ new class extends Component {
     public array $sortBy = ['column' => 'name', 'direction' => 'asc'];
 
     // Clear filters
-    public function clear(): void
-    {
+    public function clear(): void {
         $this->reset();
         $this->success('Filters cleared.', position: 'toast-bottom');
     }
 
     // Delete action
-    public function delete($id): void
-    {
+    public function delete($id): void {
         $this->warning("Will delete #$id", 'It is fake.', position: 'toast-bottom');
     }
 
     // Table headers
-    public function headers(): array
-    {
+    public function headers(): array {
         return [
             ['key' => 'id', 'label' => '#', 'class' => 'w-1'],
             ['key' => 'name', 'label' => 'Nombre del Equipo', 'class' => 'w-64'],
-            ['key' => 'boatName', 'label' => 'Lancha', 'class' => 'w-20'],
+            ['key' => 'plate', 'label' => 'Lancha', 'class' => 'w-20'],
+            ['key' => 'payments.amount', 'label' => 'Deuda Inicial', 'class' => 'w-20'],
         ];
     }
 
-    public function teams(): Collection
-    {
-        return \App\Models\Team::all()
+    public function teams(): Collection {
+        return \App\Models\Team::with(['payments'=>function($q){
+            $q->where('amount','<',0);
+        }
+        
+        ])->get()
             ->sortBy([[...array_values($this->sortBy)]])
             ->when($this->search, function (Collection $collection) {
-                return $collection->filter(fn(array $item) => str($item['name'])->contains($this->search, true));
+                return $collection->filter(fn($item) => str($item['name'])->contains($this->search, true));
             });
     }
 
-    public function with(): array
-    {
+    public function with(): array {
         return [
             'teams' => $this->teams(),
             'headers' => $this->headers()
@@ -69,9 +69,10 @@ new class extends Component {
     <!-- TABLE  -->
     <x-card>
         <x-table :headers="$headers" :rows="$teams" :sort-by="$sortBy"
-            link="team/players/{id}">
+            link="team/{id}/players">
             @scope('actions', $team)
             <x-button icon="o-trash" wire:click="delete({{ $team['id'] }})" wire:confirm="⚠️ Está seguro?" spinner class="btn-ghost btn-sm text-red-500" />
+            <x-button icon="o-currency-dollar" wire:click="delete({{ $team['id'] }})" wire:confirm="⚠️ Está seguro?" spinner class="btn-ghost btn-sm text-green-500" />
             @endscope
         </x-table>
     </x-card>

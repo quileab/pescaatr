@@ -42,6 +42,11 @@
             <x-menu activate-by-route>
                 <x-menu-item title="Inicio" icon="o-sparkles" link="/" />
                 <x-menu-item title="Equipos" icon="o-user-group" link="/teams" />
+
+                <x-menu-sub title="Pagos" icon="o-currency-dollar">
+                    <x-menu-item title="Generar Deuda" icon="o-banknotes" link="/debts" />
+                    <x-menu-item title="Listados" icon="o-clipboard-document-list" link="####" />
+                </x-menu-sub>
                 <x-menu-sub title="Settings" icon="o-cog-6-tooth">
                     {{-- <x-menu-item title="Wifi" icon="o-wifi" link="####" /> --}}
                     {{-- <x-menu-item title="Archives" icon="o-archive-box" link="####" /> --}}

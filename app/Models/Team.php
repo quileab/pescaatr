@@ -20,6 +20,11 @@ class Team extends Model
     public function players()
     {
         return $this->hasMany(\App\Models\Player::class);
-    } // member.php
+    } 
+
+    public function payments()
+    {
+        return $this->hasMany(\App\Models\Payment::class);
+    }
 
 }
