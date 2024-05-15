@@ -31,16 +31,11 @@ new class extends Component {
             ['key' => 'id', 'label' => '#', 'class' => 'w-1'],
             ['key' => 'name', 'label' => 'Nombre del Equipo', 'class' => 'w-64'],
             ['key' => 'plate', 'label' => 'Lancha', 'class' => 'w-20'],
-            ['key' => 'payments.amount', 'label' => 'Deuda Inicial', 'class' => 'w-20'],
         ];
     }
 
     public function teams(): Collection {
-        return \App\Models\Team::with(['payments'=>function($q){
-            $q->where('amount','<',0);
-        }
-        
-        ])->get()
+        return \App\Models\Team::all()
             ->sortBy([[...array_values($this->sortBy)]])
             ->when($this->search, function (Collection $collection) {
                 return $collection->filter(fn($item) => str($item['name'])->contains($this->search, true));
@@ -57,7 +52,7 @@ new class extends Component {
 
 <div>
     <!-- HEADER -->
-    <x-header title="Equipos" separator progress-indicator>
+    <x-header title="Equipos" size="text-lg" separator progress-indicator>
         <x-slot:middle class="!justify-end">
             <x-input placeholder="Search..." wire:model.live.debounce="search" clearable icon="o-magnifying-glass" />
         </x-slot:middle>
