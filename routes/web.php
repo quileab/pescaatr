@@ -64,7 +64,8 @@ Route::get('/test_mail_welcome/{id}',function($id){
 Route::middleware('auth')->group(function () {
     Volt::route('/', 'home');
     Volt::route('/teams', 'teamsList');
-    Volt::route('/team/players/{id}', 'teamPlayers');
+    Volt::route('/debts', 'teamsDebts');
+    Volt::route('/team/{id}/players', 'teamPlayers');
     Volt::route('/users', 'users.index');
     Volt::route('/users/create', 'users.create');
     Volt::route('/users/{user}/edit', 'users.edit');

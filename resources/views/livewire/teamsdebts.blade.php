@@ -14,6 +14,8 @@ new class extends Component {
 
     public array $sortBy = ['column' => 'name', 'direction' => 'asc'];
 
+    public $price=126000;
+
     // Clear filters
     public function clear(): void {
         $this->reset();
@@ -35,11 +37,13 @@ new class extends Component {
     }
 
     public function teams(): Collection {
-        return \App\Models\Team::all()
+        $res= App\Models\Team::doesnthave('payments')->get()
             ->sortBy([[...array_values($this->sortBy)]])
             ->when($this->search, function (Collection $collection) {
                 return $collection->filter(fn($item) => str($item['name'])->contains($this->search, true));
             });
+        //dd($res);
+        return $res;
     }
 
     public function with(): array {
@@ -48,15 +52,29 @@ new class extends Component {
             'headers' => $this->headers()
         ];
     }
+
+    public function assignInscriptionDue(\App\Models\Team $team){
+        // Assign $this->price as inscription due in payments as negative
+        \App\Models\Payment::updateOrCreate(
+            ['team_id'=>$team->id],
+            [
+                'date'=>now(),
+                'amount'=>$this->price*-1,
+            'notes'=>'inscription'
+            ],
+        );
+    }
 }; ?>
 
 <div>
     <!-- HEADER -->
-    <x-header title="Equipos" size="text-lg" separator progress-indicator>
+    <x-header title="Equipos sin Deuda Inicial" size="text-lg" separator progress-indicator>
         <x-slot:middle class="!justify-end">
             <x-input placeholder="Search..." wire:model.live.debounce="search" clearable icon="o-magnifying-glass" />
         </x-slot:middle>
         <x-slot:actions>
+            <x-input label="Deuda a Asignar"
+            wire:model="price" prefix="$" money inline locale="pt-BR" />
             <x-button label="Filters" @click="$wire.drawer = true" responsive icon="o-funnel" />
         </x-slot:actions>
     </x-header>
@@ -66,8 +84,7 @@ new class extends Component {
         <x-table :headers="$headers" :rows="$teams" :sort-by="$sortBy"
             link="team/{id}/players">
             @scope('actions', $team)
-            <x-button icon="o-trash" wire:click="delete({{ $team['id'] }})" wire:confirm="⚠️ Está seguro?" spinner class="btn-ghost btn-sm text-red-500" />
-            <x-button icon="o-currency-dollar" wire:click="delete({{ $team['id'] }})" wire:confirm="⚠️ Está seguro?" spinner class="btn-ghost btn-sm text-green-500" />
+            <x-button icon="o-currency-dollar" wire:click="assignInscriptionDue({{ $team['id'] }})" wire:confirm="⚠️ Confirme Asignación" spinner class="btn-ghost btn-sm text-green-500" />
             @endscope
         </x-table>
     </x-card>
