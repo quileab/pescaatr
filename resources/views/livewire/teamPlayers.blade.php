@@ -15,10 +15,12 @@ new class extends Component {
     public array $sortBy = ['column' => 'name', 'direction' => 'asc'];
 
     public $team=null;
+    public $teamData=[];
     public $players=null;
 
     public function mount($id){
         $this->team=\App\Models\Team::with('players')->find($id);
+        $this->teamData=$this->team->toArray();
         $this->players=$this->team->players;
         //dd($id,$this->team->name, $this->team->players[0]->fullname);
     }
@@ -61,17 +63,48 @@ new class extends Component {
             'headers' => $this->headers()
         ];
     }
+
+    public function saveTeamData() {
+        try{
+            DB::beginTransaction();
+            // update team data
+            $team=\App\Models\Team::find($this->team->id);
+            $team->number=$this->teamData['number'];
+            $team->name=$this->teamData['name'];
+            $team->boatName=$this->teamData['boatName'];
+            $team->plate=$this->teamData['plate'];
+            $team->hp=$this->teamData['hp'];
+            $team->save();
+            DB::commit();
+            $this->success('Datos actualizados');
+            $this->mount($team->id);
+        } catch (Exception $e) {
+            $this->warning('Exception', $e, timeout: 8000);
+            DB::rollBack();
+        }
+    }
 }; ?>
 
 <div>
     <!-- HEADER -->
-    <x-header title="Datos del Equipo" separator progress-indicator>
-    </x-header>
-
-    <!-- TABLE  -->
-    <x-card>
+    <x-header title="Datos del Equipo {{$team->name}}" size="text-xl" separator progress-indicator />
+        
+        <x-form wire:submit="saveTeamData">
+            <x-input label="Equipo Número" wire:model="teamData.number" type='number' inline />
+            <x-input label="Equipo" wire:model="teamData.name" inline />
+            <x-input label="Nombre Lancha" wire:model="teamData.boatName" inline />
+            <x-input label="Matrícula" wire:model="teamData.plate" inline />
+            <x-input label="HP" wire:model="teamData.hp" type='number' inline />
+            <x-slot:actions>
+                <x-button label="Actualizar" class="btn-primary" type="submit" spinner="saveTeamData" />
+            </x-slot:actions>
+        </x-form>
+        
+        <!-- TABLE  -->
+        <x-header title="Participantes" size="text-xl" separator />
+        <x-card>
         <x-table :headers="$headers" :rows="$players" :sort-by="$sortBy"
-            link="players/{id}/edit">
+            link="/player/{id}/edit">
             @scope('actions', $team)
             <x-button icon="o-trash" wire:click="delete({{ $team['id'] }})" wire:confirm="⚠️ Está seguro?" spinner class="btn-ghost btn-sm text-red-500" />
             @endscope

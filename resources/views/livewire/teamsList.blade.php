@@ -67,7 +67,7 @@ new class extends Component {
             link="team/{id}/players">
             @scope('actions', $team)
             <x-button icon="o-trash" wire:click="delete({{ $team['id'] }})" wire:confirm="⚠️ Está seguro?" spinner class="btn-ghost btn-sm text-red-500" />
-            <x-button icon="o-currency-dollar" wire:click="delete({{ $team['id'] }})" wire:confirm="⚠️ Está seguro?" spinner class="btn-ghost btn-sm text-green-500" />
+            <x-button icon="o-currency-dollar" link="/team/{{$team['id']}}/payments" spinner class="btn-ghost btn-sm text-green-500" />
             @endscope
         </x-table>
     </x-card>
