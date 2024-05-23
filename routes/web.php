@@ -66,6 +66,8 @@ Route::middleware('auth')->group(function () {
     Volt::route('/teams', 'teamsList');
     Volt::route('/debts', 'teamsDebts');
     Volt::route('/team/{id}/players', 'teamPlayers');
+    Volt::route('/team/{id}/payments', 'paymentsmanage');
+    Volt::route('/player/{id}/edit', 'playerEdit');
     Volt::route('/users', 'users.index');
     Volt::route('/users/create', 'users.create');
     Volt::route('/users/{user}/edit', 'users.edit');
