@@ -71,7 +71,7 @@ new class extends Component {
             ->get()
             ->sortBy([[...array_values($this->sortBy)]])
             ->when($this->search, function (Collection $collection) {
-                return $collection->filter(fn($item) => str($item['name'])->contains($this->search, true));
+                return $collection->filter(fn($item) => str($item['notes'])->contains($this->search, true));
             });
         $this->total = $result->sum('amount');
         return $result;

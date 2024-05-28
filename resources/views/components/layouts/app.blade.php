@@ -44,7 +44,8 @@
             <x-menu activate-by-route>
                 <x-menu-item title="Inicio" icon="o-sparkles" link="/" />
                 <x-menu-item title="Equipos" icon="o-user-group" link="/teams" />
-
+                <x-menu-item title="Especies" icon="o-cube-transparent" link="/species" />
+                
                 <x-menu-sub title="Pagos" icon="o-currency-dollar">
                     <x-menu-item title="Generar Deuda" icon="o-banknotes" link="/debts" />
                     <x-menu-item title="Listados" icon="o-clipboard-document-list" link="####" />
@@ -54,6 +55,8 @@
                     {{-- <x-menu-item title="Archives" icon="o-archive-box" link="####" /> --}}
                     <x-theme-toggle class="btn btn-circle btn-ghost" />
                 </x-menu-sub>
+
+                <x-menu-item title="CAPTURAS" icon="o-arrows-pointing-in" link="/captures" />
             </x-menu>
 
         </x-slot:sidebar>
