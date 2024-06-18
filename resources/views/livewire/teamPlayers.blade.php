@@ -90,11 +90,15 @@ new class extends Component {
     <x-header title="Datos del Equipo {{$team->name}}" size="text-xl" separator progress-indicator />
         
         <x-form wire:submit="saveTeamData">
+            <div class="flex flex1 flex-wrap gap-3">
             <x-input label="Equipo Número" wire:model="teamData.number" type='number' inline />
             <x-input label="Equipo" wire:model="teamData.name" inline />
+            </div>
+            <div class="flex flex1 flex-wrap gap-3">
             <x-input label="Nombre Lancha" wire:model="teamData.boatName" inline />
             <x-input label="Matrícula" wire:model="teamData.plate" inline />
             <x-input label="HP" wire:model="teamData.hp" type='number' inline />
+            </div>
             <x-slot:actions>
                 <x-button label="Actualizar" class="btn-primary" type="submit" spinner="saveTeamData" />
             </x-slot:actions>
