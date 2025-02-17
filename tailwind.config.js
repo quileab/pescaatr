@@ -15,7 +15,7 @@ export default {
         extend: {},
     },
     daisyui: {
-        themes: ['dim'],
+        themes: ["light", "dark", "aqua", "dim","lemonade","night","winter"],
       },
 
     // Add daisyUI

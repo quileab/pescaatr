@@ -74,4 +74,7 @@ Route::middleware('auth')->group(function () {
     Volt::route('/users', 'users.index');
     Volt::route('/users/create', 'users.create');
     Volt::route('/users/{user}/edit', 'users.edit');
+    Route::get('/report/captures/team/{id}', [App\Http\Controllers\ReportsController::class, 'teamCaptures']);
+    Route::get('/report/ranking', [App\Http\Controllers\ReportsController::class, 'Ranking']);
+
 });

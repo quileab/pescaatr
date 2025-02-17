@@ -20,22 +20,23 @@
         <x-slot:actions>
             <label for="main-drawer" class="lg:hidden mr-3">
                 <x-icon name="o-bars-3" class="cursor-pointer" />
-            </label>
-        </x-slot:actions>
-    </x-nav>
-
-    {{-- MAIN --}}
-    <x-main full-width>
-        {{-- SIDEBAR --}}
-        <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-100 lg:bg-inherit">
-
-            {{-- BRAND --}}
-            <x-app-brand class="p-5 pt-3" />
-
-            {{-- User --}}
-            @if($user = auth()->user())
-                <x-list-item :item="$user" value="name" sub-value="email" no-separator no-hover class="!-my-2 rounded bg-opacity-10 bg-slate-500">
-                    <x-slot:actions>
+                </label>
+                </x-slot:actions>
+                </x-nav>
+                
+                {{-- MAIN --}}
+                <x-main full-width>
+                    {{-- SIDEBAR --}}
+                    <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-100 lg:bg-inherit">
+                        
+                        {{-- BRAND --}}
+                        <x-app-brand class="p-5 pt-3" />
+                        
+                        {{-- User --}}
+                        @if($user = auth()->user())
+                        <x-list-item :item="$user" value="name" sub-value="email" no-separator no-hover class="!-my-2 rounded bg-opacity-10 bg-slate-500">
+                            <x-slot:actions>
+                        <x-theme-toggle darkTheme="dim" lightTheme="lemonade" />
                         <x-button icon="o-power" class="btn-circle btn-ghost btn-xs" tooltip-left="salir" no-wire-navigate link="/logout" />
                     </x-slot:actions>
                 </x-list-item>
@@ -50,11 +51,11 @@
                     <x-menu-item title="Generar Deuda" icon="o-banknotes" link="/debts" />
                     <x-menu-item title="Listados" icon="o-clipboard-document-list" link="####" />
                 </x-menu-sub>
-                <x-menu-sub title="Settings" icon="o-cog-6-tooth">
+                {{-- <x-menu-sub title="Settings" icon="o-cog-6-tooth"> --}}
                     {{-- <x-menu-item title="Wifi" icon="o-wifi" link="####" /> --}}
                     {{-- <x-menu-item title="Archives" icon="o-archive-box" link="####" /> --}}
-                    <x-theme-toggle class="btn btn-circle btn-ghost" />
-                </x-menu-sub>
+                    {{-- <x-theme-toggle class="btn btn-circle btn-ghost" /> --}}
+                {{-- </x-menu-sub> --}}
 
                 <x-menu-item title="CAPTURAS" icon="o-arrows-pointing-in" link="/captures" />
             </x-menu>

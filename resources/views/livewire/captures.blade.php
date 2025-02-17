@@ -11,7 +11,7 @@ new class extends Component {
     // UI
     public bool $drawer = false;
     public array $sortBy = ['column' => 'name', 'direction' => 'asc'];
-    public string $search='';
+    //public string $search='';
 
     // form data
     public $teamNumber;
@@ -37,6 +37,8 @@ new class extends Component {
     // On mount
     public function mount(){
         $this->mary_species=\App\Models\Species::orderBy('name')->get();
+        $this->selectedTeam=\App\Models\Team::first();
+        $this->teamNumber=$this->selectedTeam->number;
         foreach ($this->mary_species as $item) {
             $this->species[$item->id]=$item->name;
         }
@@ -116,7 +118,7 @@ new class extends Component {
             ]);
             DB::commit();
             $this->drawer=false;
-            $this->reset('fish','teamNumber','size','weight');
+            $this->reset('fish','size','weight');
             $this->success('Captura Registrada OK');
         } 
         catch (Exception $e) {
@@ -125,15 +127,22 @@ new class extends Component {
         }
     }
 
+    // public function stats($id)
+    // {
+    //     $data=$this->team->stats($id);
+    //     dd($data);
+    // }
+
 }; ?>
 
 <div>
     <!-- HEADER -->
     <x-header title="CAPTURAS {{ $this->selectedTeam->name ?? '?'}}" size="text-lg" separator progress-indicator>
         <x-slot:middle class="!justify-end">
-            <x-input placeholder="Equipo Número..." wire:model.live.debounce="search" clearable icon="o-magnifying-glass" />
+            <x-input placeholder="Equipo Número..." wire:model.live.debounce="teamNumber" clearable icon="o-magnifying-glass" error-class="hidden" />
         </x-slot:middle>
         <x-slot:actions>
+            <x-button label="STATS" link="/report/captures/team/{{ $this->selectedTeam->id }}" external class="btn-warning" responsive icon="o-chart-bar" />
             <x-button label="NUEVA" @click="$wire.drawer = true" class="btn-success" responsive icon="o-plus" />
         </x-slot:actions>
     </x-header>
@@ -144,6 +153,9 @@ new class extends Component {
         <x-table :headers="$headers" :rows="$fishes" :sort-by="$sortBy"
             {{-- link="species/{id}/edit" --}}
             >
+            @scope('cell_id',$fishes)
+            {{$this->loop->index+1}}
+            @endscope
             {{-- @scope('actions', $species)
             <x-button icon="o-trash" wire:click="delete({{ $species['id'] }})" wire:confirm="⚠️ Está seguro?" spinner class="btn-ghost btn-sm text-red-500" />
             @endscope --}}
@@ -168,12 +180,12 @@ new class extends Component {
 
             <x-input label="Tamaño" wire:model="size" type='number' inline error-class="hidden" />
             <x-input label="Peso" wire:model="weight" type='number' inline error-class="hidden" />
-            <x-button label="Validar" icon="o-check" class="btn-primary" 
-                wire:click='validateData' responsive spinner="validateData" />
+            {{-- <x-button label="Validar" icon="o-check" class="btn-primary" 
+                wire:click='validateData' responsive spinner="validateData" /> --}}
 
-            @if ($errors->count()==0)
+            {{-- @if ($errors->count()==0) --}}
                 <x-button label="AGREGAR" icon="o-clipboard-document-check" class="btn-success" type="submit" spinner="saveCapture" />
-            @endif
+            {{-- @endif --}}
         </x-form>
 
         <x-slot:actions>
