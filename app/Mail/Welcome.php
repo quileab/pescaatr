@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
@@ -20,7 +19,7 @@ class Welcome extends Mailable
      */
     public function __construct(string $plate)
     {
-        $this->team=\App\Models\Team::with('players')->where('plate', $plate)->first()->toArray();
+        $this->team = \App\Models\Team::with('players')->where('plate', $plate)->first()->toArray();
         //dd($this->team);
     }
 
@@ -31,11 +30,11 @@ class Welcome extends Mailable
     {
         return new Envelope(
             from: 'contacto@pescavariadaatr.com.ar',
-            to: 'contacto@pescavariadaatr.com.ar',
+            to: [$this->team['players'][0]['email']],
             subject: 'Bienvenido a Pesca Variada ATR',
             bcc: [],
-            cc: [],
-            replyTo: 'contacto@pescavariadaatr.com.ar',
+            cc: ['contacto@pescavariadaatr.com.ar'],
+            replyTo: ['contacto@pescavariadaatr.com.ar'],
         );
     }
 
@@ -60,7 +59,7 @@ class Welcome extends Mailable
     public function attachments(): array
     {
         return [
-          Attachment::fromPath(public_path('Reglamento y Condiciones.pdf')),
+            Attachment::fromPath(public_path('Reglamento y Condiciones.pdf')),
         ];
     }
 }

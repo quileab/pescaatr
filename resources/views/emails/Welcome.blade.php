@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,51 +8,72 @@
   <title>Bienvenidos</title>
 </head>
 <style>
-  body{
+  body {
     font-family: Arial, Helvetica, sans-serif;
-    padding:1rem;
+    padding: 1rem;
   }
-  table{
+
+  table {
     width: 100%;
     border-collapse: collapse;
     border-radius: 0.5rem;
     overflow: hidden;
   }
-  th{
+
+  th {
     background-color: #0045a5;
     color: #ffffff;
   }
-  td,th{
-    padding:0.5rem;
+
+  td,
+  th {
+    padding: 0.5rem;
   }
+
   tr:nth-child(even) {
     background-color: #c3dcfe;
   }
+
   tr:nth-child(odd) {
     background-color: #dfecff;
   }
-  h3{
-    margin-top:0.2rem;
+
+  h3 {
+    margin-top: 0.2rem;
   }
 </style>
+
 <body>
   <h1>Bienvenidos</h1>
   Los esperamos para disfrutar de la fiesta!!!
   <h3>Equipo: {{ $team['name'] }}</h3>
-  Embarcación: {{ $team['boatName'] }} # {{ $team['plate'] }}<br>
+  Embarcación: {{ $team['boatName'] }} / Matrícula: {{ $team['plate'] }}<br>
+  HP: {{ $team['hp'] }}<br>
+  Participa Timonel: {{ $team['wheelplay'] ? 'Si' : 'No' }}<br>
   <h3>Participantes:</h3>
   <table>
-    <thead><tr><th>Nombre</th><th>Teléfono</th><th>Email</th></tr></thead>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Teléfono</th>
+        <th>Email</th>
+        <th>Fecha Nacimiento</th>
+        <th>Sexo</th>
+      </tr>
+    </thead>
     <tbody>
-    @foreach($team['players'] as $player)
-    <tr>
-      <td>{{$player['fullname']}}</td>
-      <td>{{$player['phone']}}</td>
-      <td>{{$player['email']}}</td>
-    </tr>
+      @foreach($team['players'] as $player)
+      <tr>
+      <td>{{$player['fullname'] ?? 'error'}}</td>
+      <td>{{$player['phone'] ?? 'error'}}</td>
+      <td>{{$player['email'] ?? 'error'}}</td>
+      <td>{{$player['dob'] ?? 'error'}}</td>
+      <td>{{$player['sex'] ?? 'error'}}</td>
+      </tr>
     @endforeach
     </tbody>
   </table>
-  
+
 </body>
+
 </html>

@@ -9,9 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Player extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'id', 'fullname', 'phone', 'email', 'city','type','team_id'
-    ];
+    protected $guarded = [];
     protected $hidden = ['password'];
 
     // Relationships, inverse. A player can be on just one team at a time.
@@ -21,13 +19,13 @@ class Player extends Model
     }
 
     // create an accessor to translate player type
-    protected function type(): Attribute{
+    protected function type(): Attribute
+    {
         return Attribute::make(get: fn(string $value)
-         => match($value){
+        => match ($value) {
             'wheel' => 'Timonel',
             'player' => 'Participante',
             default => 'Participante'
-            });
+        });
     }
-
 }

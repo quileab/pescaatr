@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
-            $table->string('name',120);
-            $table->string('boatName',80);
-            $table->string('plate',80)->unique();
+            $table->string('name', 120);
+            $table->string('boatName', 80);
+            $table->string('plate', 80)->unique();
             $table->integer('hp');
+            $table->boolean('wheelplay')->default(false);
             $table->integer('number')->unique()->nullable();
             $table->timestamps();
         });

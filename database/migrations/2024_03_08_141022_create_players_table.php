@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('players', function (Blueprint $table) {
             $table->id();
-            $table->string('fullname',50);
-            $table->string('phone',15);
-            $table->string('email',80)->unique();
-            $table->string('city',50);
-            $table->enum('type',['player','wheel','A','B']);
-            $table->foreignIdFor(\App\Models\Team::class)->constrained();
+            $table->string('fullname', 50)->nullable();
+            $table->date('dob')->required()->nullable();
+            $table->string('sex')->default('m');
+            $table->string('phone', 15)->nullable();
+            $table->string('email', 80)->unique()->nullable();
+            $table->string('city', 50)->nullable();
+            $table->enum('type', ['player', 'wheel', 'A', 'B'])->default('player')->nullable();
+            $table->foreignIdFor(\App\Models\Team::class)->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
