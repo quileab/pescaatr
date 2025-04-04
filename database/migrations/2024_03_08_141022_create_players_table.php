@@ -17,7 +17,7 @@ return new class extends Migration
             $table->date('dob')->required()->nullable();
             $table->string('sex')->default('m');
             $table->string('phone', 15)->nullable();
-            $table->string('email', 80)->unique()->nullable();
+            $table->string('email', 80)->nullable();
             $table->string('city', 50)->nullable();
             $table->enum('type', ['player', 'wheel', 'A', 'B'])->default('player')->nullable();
             $table->foreignIdFor(\App\Models\Team::class)->constrained()->onDelete('cascade')->onUpdate('cascade');

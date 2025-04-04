@@ -1,5 +1,7 @@
 <?php
+
 use Livewire\Volt\Volt;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
@@ -14,10 +16,10 @@ Volt::route('/inscriptions', 'inscriptions.create');
 
 // Define the logout
 Route::get('/logout', function () {
-    auth()->logout();
+    Auth::logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
- 
+
     return redirect('/');
 });
 
@@ -28,24 +30,24 @@ Route::get('/cache', function () {
 
 Route::get('/clear', function () {
     $logs = [];
-    $maintenance=[
+    $maintenance = [
         //'DebugBar'=>'debugbar:clear',
         //'Storage Link'=>'storage:link',
-        'Config'=>'config:clear',
-        'Optimize Clear'=>'optimize:clear',
+        'Config' => 'config:clear',
+        'Optimize Clear' => 'optimize:clear',
         //'Optimize'=>'optimize',
-        'Route Clear'=>'route:clear',
-        'Cache'=>'cache:clear',
+        'Route Clear' => 'route:clear',
+        'Cache' => 'cache:clear',
     ];
     foreach ($maintenance as $key => $value) {
         try {
             Artisan::call($value);
-            $logs[$key]='✔️';
+            $logs[$key] = '✔️';
         } catch (\Exception $e) {
-            $logs[$key]='❌'.$e->getMessage();
+            $logs[$key] = '❌' . $e->getMessage();
         }
     }
-    return "<pre>".print_r($logs,true)."</pre><hr />";
+    return "<pre>" . print_r($logs, true) . "</pre><hr />";
     //    return var_dump($maintenance,true);
     //.Artisan::output();
 });
@@ -54,7 +56,7 @@ Route::get('/artisan/{command}', function ($command) {
     return Artisan::call($command);
 });
 
-Route::get('/test_mail_welcome/{id}',function($id){
+Route::get('/test_mail_welcome/{id}', function ($id) {
     Illuminate\Support\Facades\Mail::send(new App\Mail\Welcome($id));
     //return redirect('/');
 });

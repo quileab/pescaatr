@@ -73,6 +73,11 @@
     @endforeach
     </tbody>
   </table>
+  <hr>
+  <h2>Importante</h2>
+  Los pagos deben enviarse al CBU: 2850787540095169918958 <i>(Club Atlético y Tiro Reconquista)</i><br>
+  Luego de realizado el pago enviar el comprobante al celular <b>3482625556</b> y/o al email:
+  <b>pagos@pescavariadaatr.com.ar</b><br>
 
 </body>
 

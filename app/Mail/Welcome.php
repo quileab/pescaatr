@@ -19,7 +19,7 @@ class Welcome extends Mailable
      */
     public function __construct(string $plate)
     {
-        $this->team = \App\Models\Team::with('players')->where('plate', $plate)->first()->toArray();
+        $this->team = \App\Models\Team::where('plate', $plate)->first();
         //dd($this->team);
     }
 
@@ -30,7 +30,7 @@ class Welcome extends Mailable
     {
         return new Envelope(
             from: 'contacto@pescavariadaatr.com.ar',
-            to: [$this->team['players'][0]['email']],
+            to: [$this->team->email],
             subject: 'Bienvenido a Pesca Variada ATR',
             bcc: [],
             cc: ['contacto@pescavariadaatr.com.ar'],
