@@ -18,14 +18,9 @@ class Player extends Model
         return $this->belongsTo(\App\Models\Team::class);
     }
 
-    // create an accessor to translate player type
-    protected function type(): Attribute
+    // create an accessor typeAttr to translate player type wheel or player as Timonel or Participante
+    protected function typeAttr(): Attribute
     {
-        return Attribute::make(get: fn(string $value)
-        => match ($value) {
-            'wheel' => 'Timonel',
-            'player' => 'Participante',
-            default => 'Participante'
-        });
+        return Attribute::make(get: fn($value) => $this->type == 'wheel' ? 'Timonel' : 'Participante');
     }
 }

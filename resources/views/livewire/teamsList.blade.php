@@ -15,18 +15,21 @@ new class extends Component {
     public array $sortBy = ['column' => 'name', 'direction' => 'asc'];
 
     // Clear filters
-    public function clear(): void {
+    public function clear(): void
+    {
         $this->reset();
         $this->success('Filters cleared.', position: 'toast-bottom');
     }
 
     // Delete action
-    public function delete($id): void {
+    public function delete($id): void
+    {
         $this->warning("Will delete #$id", 'It is fake.', position: 'toast-bottom');
     }
 
     // Table headers
-    public function headers(): array {
+    public function headers(): array
+    {
         return [
             ['key' => 'id', 'label' => '#', 'class' => 'w-1'],
             ['key' => 'name', 'label' => 'Nombre del Equipo', 'class' => 'w-64'],
@@ -34,7 +37,8 @@ new class extends Component {
         ];
     }
 
-    public function teams(): Collection {
+    public function teams(): Collection
+    {
         return \App\Models\Team::all()
             ->sortBy([[...array_values($this->sortBy)]])
             ->when($this->search, function (Collection $collection) {
@@ -42,7 +46,8 @@ new class extends Component {
             });
     }
 
-    public function with(): array {
+    public function with(): array
+    {
         return [
             'teams' => $this->teams(),
             'headers' => $this->headers()
@@ -63,18 +68,20 @@ new class extends Component {
 
     <!-- TABLE  -->
     <x-card>
-        <x-table :headers="$headers" :rows="$teams" :sort-by="$sortBy"
-            link="team/{id}/players">
+        <x-table :headers="$headers" :rows="$teams" :sort-by="$sortBy" link="team/{id}/players">
             @scope('actions', $team)
-            <x-button icon="o-trash" wire:click="delete({{ $team['id'] }})" wire:confirm="⚠️ Está seguro?" spinner class="btn-ghost btn-sm text-red-500" />
-            <x-button icon="o-currency-dollar" link="/team/{{$team['id']}}/payments" spinner class="btn-ghost btn-sm text-green-500" />
+            <x-button icon="o-trash" wire:click="delete({{ $team['id'] }})" wire:confirm="⚠️ Está seguro?" spinner
+                class="btn-ghost btn-sm text-red-500" />
+            <x-button icon="o-currency-dollar" link="/team/{{$team['id']}}/payments" spinner
+                class="btn-ghost btn-sm text-green-500" />
             @endscope
         </x-table>
     </x-card>
 
     <!-- FILTER DRAWER -->
     <x-drawer wire:model="drawer" title="Filters" right separator with-close-button class="lg:w-1/3">
-        <x-input placeholder="Search..." wire:model.live.debounce="search" icon="o-magnifying-glass" @keydown.enter="$wire.drawer = false" />
+        <x-input placeholder="Search..." wire:model.live.debounce="search" icon="o-magnifying-glass"
+            @keydown.enter="$wire.drawer = false" />
 
         <x-slot:actions>
             <x-button label="Reset" icon="o-x-mark" wire:click="clear" spinner />

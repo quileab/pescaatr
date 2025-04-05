@@ -31,13 +31,15 @@ Route::get('/cache', function () {
 Route::get('/clear', function () {
     $logs = [];
     $maintenance = [
-        //'DebugBar'=>'debugbar:clear',
-        //'Storage Link'=>'storage:link',
-        'Config' => 'config:clear',
+        'DebugBar' => 'debugbar:clear',
+        'Storage Link' => 'storage:link',
         'Optimize Clear' => 'optimize:clear',
-        //'Optimize'=>'optimize',
+        'Config' => 'config:clear',
         'Route Clear' => 'route:clear',
         'Cache' => 'cache:clear',
+        'View' => 'view:clear',
+        'Event' => 'event:clear',
+        'Optimize' => 'optimize',
     ];
     foreach ($maintenance as $key => $value) {
         try {
