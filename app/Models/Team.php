@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Team extends Model
 {
@@ -20,5 +22,18 @@ class Team extends Model
     public function payments()
     {
         return $this->hasMany(\App\Models\Payment::class);
+    }
+
+    public function sendWelcomeEmail()
+    {
+        // TODO: send the welcome email
+        Mail::to($this->email)->send(new \App\Mail\Welcome($this->id));
+    }
+
+    public function sendDebtSummary()
+    {
+        Mail::to($this->email)->send(new \App\Mail\AccountStatus(
+            $this->id,
+        ));
     }
 }

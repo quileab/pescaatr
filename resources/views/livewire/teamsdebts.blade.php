@@ -88,8 +88,13 @@ new class extends Component {
     <x-card>
         <x-table :headers="$headers" :rows="$teams" :sort-by="$sortBy" link="team/{id}/players">
             @scope('actions', $team)
-            <x-button icon="o-currency-dollar" wire:click="assignInscriptionDue({{ $team['id'] }})"
-                wire:confirm="⚠️ Confirme Asignación" spinner class="btn-ghost btn-sm text-green-500" />
+            <x-dropdown right>
+                <x-slot:trigger>
+                    <x-button label="Generar Deuda" icon="o-currency-dollar" class="text-green-500" />
+                </x-slot:trigger>
+                <x-menu-item title="Confirmar" wire:click="assignInscriptionDue({{ $team['id'] }})"
+                    icon="o-check-circle" />
+            </x-dropdown>
             @endscope
         </x-table>
     </x-card>

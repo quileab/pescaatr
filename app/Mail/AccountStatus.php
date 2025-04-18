@@ -2,18 +2,19 @@
 
 namespace App\Mail;
 
-//use Illuminate\Bus\Queueable;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-//use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\SerializesModels;
 
-class Welcome extends Mailable
+class AccountStatus extends Mailable
 {
-    //use Queueable, SerializesModels;
+    use Queueable, SerializesModels;
 
     public $team;
+
     /**
      * Create a new message instance.
      */
@@ -29,12 +30,7 @@ class Welcome extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: 'contacto@pescavariadaatr.com.ar',
-            to: [$this->team->email],
-            subject: 'Bienvenido a Pesca Variada ATR',
-            bcc: [],
-            cc: ['contacto@pescavariadaatr.com.ar'],
-            replyTo: ['contacto@pescavariadaatr.com.ar'],
+            subject: 'Estado de Cuentas',
         );
     }
 
@@ -43,11 +39,16 @@ class Welcome extends Mailable
      */
     public function content(): Content
     {
+        $result = \App\Models\Payment::where('team_id', $this->team->id)
+            ->get()
+            ->sortBy(['column' => 'date', 'direction' => 'desc']);
+
         return new Content(
-            view: 'emails.welcome',
+            view: 'emails.account-status',
             with: [
                 'team' => $this->team,
-            ],
+                'payments' => $result
+            ]
         );
     }
 
@@ -58,8 +59,6 @@ class Welcome extends Mailable
      */
     public function attachments(): array
     {
-        return [
-            Attachment::fromPath(public_path('Reglamento y Condiciones.pdf')),
-        ];
+        return [];
     }
 }

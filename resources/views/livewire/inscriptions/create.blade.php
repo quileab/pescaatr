@@ -186,9 +186,9 @@ new #[Layout('components.layouts.clean')] #[Title('Inscripciones')] class extend
       }
 
       DB::commit();
-      $this->success('Equipo agregado con éxito', 'Bienvenidos',redirectTo: '/');
+      $this->success('Equipo agregado con éxito', 'Bienvenidos', redirectTo: '/');
       // send welcome email
-      Illuminate\Support\Facades\Mail::send(new App\Mail\Welcome($this->teamBoatPlate));
+      Team::find($team->id)->sendWelcomeEmail();
       $this->reset();
     } catch (Exception $e) {
       $this->warning('Exception', 'Verifique que los datos ingresados sean correctos.' . $e, timeout: 8000);

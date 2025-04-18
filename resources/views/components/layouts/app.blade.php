@@ -38,9 +38,9 @@
             {{-- User --}}
             @if($user = auth()->user())
                 <x-list-item :item="$user" value="name" sub-value="email" no-separator no-hover
-                    class="!-my-2 rounded bg-opacity-10 bg-slate-500">
+                    class="!-my-2 rounded bg-opacity-10 bg-slate-500/50">
                     <x-slot:actions>
-                        <x-button icon="o-power" class="btn-circle btn-ghost btn-xs" tooltip-left="salir" no-wire-navigate
+                        <x-button icon="o-power" class="text-error btn-circle btn-ghost btn-xs" tooltip-left="salir" no-wire-navigate
                             link="/logout" />
                     </x-slot:actions>
                 </x-list-item>

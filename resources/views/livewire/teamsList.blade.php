@@ -21,12 +21,6 @@ new class extends Component {
         $this->success('Filters cleared.', position: 'toast-bottom');
     }
 
-    // Delete action
-    public function delete($id): void
-    {
-        $this->warning("Will delete #$id", 'It is fake.', position: 'toast-bottom');
-    }
-
     // Table headers
     public function headers(): array
     {
@@ -53,6 +47,11 @@ new class extends Component {
             'headers' => $this->headers()
         ];
     }
+
+    public function email($id)
+    {
+        Team::find($id)->sendWelcomeEmail();
+    }
 }; ?>
 
 <div>
@@ -70,9 +69,9 @@ new class extends Component {
     <x-card>
         <x-table :headers="$headers" :rows="$teams" :sort-by="$sortBy" link="team/{id}/players">
             @scope('actions', $team)
-            <x-button icon="o-trash" wire:click="delete({{ $team['id'] }})" wire:confirm="⚠️ Está seguro?" spinner
-                class="btn-ghost btn-sm text-red-500" />
-            <x-button icon="o-currency-dollar" link="/team/{{$team['id']}}/payments" spinner
+            <x-button label="@Bienvenida" icon="o-envelope" wire:click="email({{ $team['id'] }})"
+                class="btn-ghost btn-sm text-blue-500" />
+            <x-button label="Pagos" icon="o-currency-dollar" link="/team/{{$team['id']}}/payments" spinner
                 class="btn-ghost btn-sm text-green-500" />
             @endscope
         </x-table>
