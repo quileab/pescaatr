@@ -11,6 +11,7 @@ new class extends Component {
     public string $search = '';
 
     public bool $drawer = false;
+    public int $updating = 0;
 
     public array $sortBy = ['column' => 'date', 'direction' => 'des'];
 
@@ -39,7 +40,7 @@ new class extends Component {
         try {
             DB::beginTransaction();
             // create the team
-            $payment = \App\Models\Payment::create([
+            $payment = Payment::create([
                 'team_id' => $this->team,
                 'date' => $this->payDate,
                 'amount' => $this->payAmount,
@@ -51,6 +52,48 @@ new class extends Component {
             //Illuminate\Support\Facades\Mail::send(new App\Mail\Welcome($this->teamBoatPlate));
             $this->reset(['payDate', 'payAmount', 'payDescription']);
             $this->drawer = false;
+            $this->updating = false;
+
+        } catch (Exception $e) {
+            $this->warning('Exception', 'Verifique que los datos ingresados sean correctos.', timeout: 8000);
+            DB::rollBack();
+        }
+    }
+
+    public function newPayment(): void
+    {
+        $this->reset(['updating', 'payDate', 'payAmount', 'payDescription']);
+        $this->payDate = now()->format('Y-m-d');
+        $this->drawer = true;
+    }
+
+    public function editPayment($id): void
+    {
+        $this->updating = $id;
+        $payment = Payment::find($id);
+        $this->payDate = date('Y-m-d', strtotime($payment->date));
+        $this->payAmount = $payment->amount;
+        $this->payDescription = $payment->notes;
+        $this->drawer = true;
+    }
+
+    public function updatePayment(): void
+    {
+        try {
+            DB::beginTransaction();
+            // create the team
+            $payment = Payment::find($this->updating);
+            $payment->date = $this->payDate;
+            $payment->amount = $this->payAmount;
+            $payment->notes = $this->payDescription;
+            $payment->save();
+            DB::commit();
+            $this->success('Pago actualizado OK');
+            // send welcome email
+            //Illuminate\Support\Facades\Mail::send(new App\Mail\Welcome($this->teamBoatPlate));
+            $this->reset(['payDate', 'payAmount', 'payDescription']);
+            $this->drawer = false;
+            $this->updating = 0;
 
         } catch (Exception $e) {
             $this->warning('Exception', 'Verifique que los datos ingresados sean correctos.', timeout: 8000);
@@ -72,7 +115,7 @@ new class extends Component {
 
     public function payments(): Collection
     {
-        $result = \App\Models\Payment::where('team_id', $this->team)
+        $result = Payment::where('team_id', $this->team)
             ->get()
             ->sortBy([[...array_values($this->sortBy)]])
             ->when($this->search, function (Collection $collection) {
@@ -105,8 +148,7 @@ new class extends Component {
         </x-slot:middle>
         <x-slot:actions>
             @if($total < 0)
-                <x-button label="Nuevo Pago" class="btn-primary" @click="$wire.drawer = true" responsive
-                    icon="o-plus-circle" />
+                <x-button label="Nuevo Pago" class="btn-primary" wire:click="newPayment" responsive icon="o-plus-circle" />
             @else
                 <x-button label="Generar Deuda" link="/debts" class="btn-accent" />
             @endif
@@ -116,12 +158,17 @@ new class extends Component {
     <!-- TABLE  -->
     <x-card>
         <x-table :headers="$headers" :rows="$payments" :sort-by="$sortBy">
+            @scope('cell_date', $payments)
+            {{ date('d/m/Y H:i', strtotime($payments->date)) }}
+            @endscope
             @scope('cell_amount', $payments)
             <x-badge :value="number_format($payments->amount, 2, ',', '.')" />
             @endscope
             @scope('actions', $payment)
             <x-button icon="o-trash" wire:click="delete({{ $payment['id'] }})" wire:confirm="⚠️ Está seguro?" spinner
                 class="btn-ghost btn-sm text-red-500" />
+            <x-button icon="s-pencil-square" wire:click="editPayment({{ $payment['id'] }})" spinner
+                class="btn-ghost btn-sm text-blue-500" />
             @endscope
         </x-table>
         <x-slot:actions>
@@ -136,15 +183,22 @@ new class extends Component {
     </x-card>
 
     <!-- FILTER DRAWER -->
-    <x-drawer wire:model="drawer" title="Nuevo Pago" right separator with-close-button class="lg:w-1/3">
-        <x-datetime label="Fecha" wire:model="payDate" icon="o-calendar" inline class="mb-1" />
-        <x-input label="Descripción" wire:model.live.debounce="payDescription" icon="o-pencil-square" inline
-            class="mb-1" />
-        <x-input label="Importe" wire:model="payAmount" icon="o-currency-dollar" money locale="pt-BR" inline
-            class="mb-1" />
+    <x-drawer wire:model="drawer" title="{{ $updating ? 'Editar Pago' : 'Nuevo Pago' }}" right separator
+        with-close-button class="lg:w-1/3">
+        <div class="grid grid-cols-1 gap-2">
+            <x-datetime label="Fecha" wire:model="payDate" icon="o-calendar" inline class="mb-1" />
+            <x-input label="Descripción" wire:model.live.debounce="payDescription" icon="o-pencil-square" inline
+                class="mb-1" />
+            <x-input label="Importe" wire:model="payAmount" icon="o-currency-dollar" inline class="mb-1" />
+        </div>
         <x-slot:actions>
             <x-button label="Cerrar" icon="o-x-mark" class="btn-secondary" @click="$wire.drawer = false" />
-            <x-button label="Registrar" icon="o-check" class="btn-accent" wire:click="registerPayment" spinner />
+
+            @if($updating == 0)
+                <x-button label="Registrar" icon="o-check" class="btn-accent" wire:click="registerPayment" spinner />
+            @else
+                <x-button label="Actualizar" icon="o-check" class="btn-accent" wire:click="updatePayment" spinner />
+            @endif
         </x-slot:actions>
     </x-drawer>
 </div>

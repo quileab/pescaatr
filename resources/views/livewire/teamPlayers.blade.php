@@ -84,6 +84,12 @@ new class extends Component {
 
     public function saveTeamData()
     {
+        $this->validate([
+            'teamData.number' => 'unique:teams,number,' . $this->team->id,
+            'teamData.email' => 'unique:teams,email,' . $this->team->id
+        ]);
+
+
         try {
             DB::beginTransaction();
             // update team data

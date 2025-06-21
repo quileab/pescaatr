@@ -64,6 +64,13 @@ Route::get('/test_mail_welcome/{id}', function ($id) {
     //return redirect('/');
 });
 
+// Route to reportTeamsFish in ReportsController
+Route::get('/reportTeamsFish', [App\Http\Controllers\ReportsController::class, 'reportTeamsFish']);
+// Route to reportTeamsHP embarcations in ReportsController
+Route::get('/reportTeamsHP', [App\Http\Controllers\ReportsController::class, 'reportTeamsHP']);
+// Route to reportTeamsDebts in ReportsController
+Route::get('/reportTeamsDebts', [App\Http\Controllers\ReportsController::class, 'reportTeamsDebts']);
+
 
 // Protected routes here
 Route::middleware('auth')->group(function () {

@@ -40,8 +40,8 @@
                 <x-list-item :item="$user" value="name" sub-value="email" no-separator no-hover
                     class="!-my-2 rounded bg-opacity-10 bg-slate-500/50">
                     <x-slot:actions>
-                        <x-button icon="o-power" class="text-error btn-circle btn-ghost btn-xs" tooltip-left="salir" no-wire-navigate
-                            link="/logout" />
+                        <x-button icon="o-power" class="text-error btn-circle btn-ghost btn-xs" tooltip-left="salir"
+                            no-wire-navigate link="/logout" />
                     </x-slot:actions>
                 </x-list-item>
             @endif
@@ -56,6 +56,9 @@
                     <x-menu-item title="Listados" icon="o-clipboard-document-list" link="####" />
                 </x-menu-sub>
                 <x-menu-item title="Email" icon="o-envelope" link="https://server.dns-principal-29.com:2096" external />
+                <x-menu-item title="Equipos y Piezas" icon="o-printer" link="/reportTeamsFish" external />
+                <x-menu-item title="Listado de Equipos por HP" icon="o-printer" link="/reportTeamsHP" external />
+                <x-menu-item title="Listado de Deuda" icon="o-printer" link="/reportTeamsDebts" external />
                 <x-menu-sub title="Settings" icon="o-cog-6-tooth">
                     {{-- <x-menu-item title="Wifi" icon="o-wifi" link="####" /> --}}
                     {{-- <x-menu-item title="Archives" icon="o-archive-box" link="####" /> --}}

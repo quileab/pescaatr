@@ -26,6 +26,7 @@ new class extends Component {
     {
         return [
             ['key' => 'id', 'label' => '#', 'class' => 'w-1'],
+            ['key' => 'number', 'label' => 'N°', 'class' => 'w-1'],
             ['key' => 'name', 'label' => 'Nombre del Equipo', 'class' => 'w-64'],
             ['key' => 'plate', 'label' => 'Lancha', 'class' => 'w-20'],
         ];
@@ -33,7 +34,11 @@ new class extends Component {
 
     public function teams(): Collection
     {
-        return \App\Models\Team::all()
+        // if search is only numbers
+        if (is_numeric($this->search)) {
+            return Team::where('number', $this->search)->get();
+        }
+        return Team::all()
             ->sortBy([[...array_values($this->sortBy)]])
             ->when($this->search, function (Collection $collection) {
                 return $collection->filter(fn($item) => str($item['name'])->contains($this->search, true));
@@ -52,11 +57,32 @@ new class extends Component {
     {
         Team::find($id)->sendWelcomeEmail();
     }
+
+    public function copy($id)
+    {
+        // copy to clipboard with JS team number, players names and team name
+        $team = Team::find($id);
+        $players = $team->players;
+        $players = $players->map(fn($player) =>
+            // use tab to separate names 
+            $player->fullname)->implode("\t");
+        $teamNumber = $team->number;
+        $teamName = $team->name;
+
+        $this->dispatch(
+            'copyToClipboard',
+            $teamNumber . "\t" . $players . "\t" . $teamName
+        );
+        $this->success('Datos del equipo copiados al portapapeles', position: 'toast-bottom');
+    }
+
+
 }; ?>
 
 <div>
     <!-- HEADER -->
-    <x-header title="Equipos" size="text-lg" separator progress-indicator>
+    <x-header title="Equipos" size="text-lg" separator progress-indicator
+        class="sticky top-0 z-50 backdrop-blur-xl p-1 mx-0">
         <x-slot:middle class="!justify-end">
             <x-input placeholder="Search..." wire:model.live.debounce="search" clearable icon="o-magnifying-glass" />
         </x-slot:middle>
@@ -69,10 +95,14 @@ new class extends Component {
     <x-card>
         <x-table :headers="$headers" :rows="$teams" :sort-by="$sortBy" link="team/{id}/players">
             @scope('actions', $team)
-            <x-button label="@Bienvenida" icon="o-envelope" wire:click="email({{ $team['id'] }})"
-                class="btn-ghost btn-sm text-blue-500" />
-            <x-button label="Pagos" icon="o-currency-dollar" link="/team/{{$team['id']}}/payments" spinner
-                class="btn-ghost btn-sm text-green-500" />
+            <div class="flex">
+                <x-button label="@Bienvenida" icon="o-envelope" wire:click="email({{ $team['id'] }})"
+                    class="btn-ghost btn-sm text-blue-500" />
+                <x-button label="Pagos" icon="o-currency-dollar" link="/team/{{$team['id']}}/payments" spinner
+                    class="btn-ghost btn-sm text-green-500" />
+                <x-button icon="o-clipboard-document" wire:click="copy({{ $team['id'] }})"
+                    class="btn-ghost btn-sm text-orange-500" />
+            </div>
             @endscope
         </x-table>
     </x-card>
@@ -87,4 +117,12 @@ new class extends Component {
             <x-button label="Done" icon="o-check" class="btn-primary" @click="$wire.drawer = false" />
         </x-slot:actions>
     </x-drawer>
+
+    @script
+    <script>
+        Livewire.on('copyToClipboard', (text) => {
+            navigator.clipboard.writeText(text);
+        })
+    </script>
+    @endscript
 </div>
